@@ -1,6 +1,7 @@
 
 import React from 'react';
 
+//Layout for product cards
 function ProductCard({ product, onAddToCart }) {
    return (
       <div className="product-card">

@@ -2,6 +2,8 @@ import React from 'react';
 import ItemInCart from './ItemInCart';
 
 function ShoppingCart({ cart, onClearCart, onCheckout }) {
+   
+   //Calculate total price of items in cart
    const total = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
 
    return (

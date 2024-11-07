@@ -7,6 +7,10 @@ function CartActions() {
     const [cart, setCart] = useState([]);
     const [isCartVisible, setIsCartVisible] = useState(false);
 
+
+
+
+    //Add products to cart
     const addToCart = (product) => {
         setCart(prevCart => {
             const existingProduct = prevCart.find(item => item.id === product.id);
@@ -26,15 +30,24 @@ function CartActions() {
         });
     };
 
+
     const clearCart = () => setCart([]);
 
+
+    //Handle checkout and stock
     const checkout = () => {
+
+        if (cart.length === 0) {
+            alert("Your cart is empty.");
+            return; 
+        }
+
         const itemsToPurchase = cart.map(item => ({
             id: item.id,
             quantity: item.quantity
         }));
 
-        // Send the checkout request to the backend
+
         fetch("http://localhost:5002/checkout", {
             method: "POST",
             headers: {
@@ -44,8 +57,9 @@ function CartActions() {
         })
             .then(response => response.json())
             .then(data => {
-                alert(data.message); // Show success message from backend
-                clearCart(); // Clear the cart after purchase
+                alert(data.message); 
+                clearCart(); 
+
             })
             .catch(error => {
                 console.error("Error during checkout:", error);
@@ -60,18 +74,23 @@ function CartActions() {
 
     return (
         <div>
-           <nav>
+          <div className="navbar">
+            <h1>Cool Store</h1>
+            <nav>
               <button onClick={() => setIsCartVisible(false)}>Products</button>
               <button onClick={() => setIsCartVisible(true)}>Cart ({totalQuantity()})</button>
-           </nav>
-  
-           {isCartVisible ? (
+            </nav>
+          </div>
+          
+          <div className="main-content">
+            {isCartVisible ? (
               <ShoppingCart cart={cart} onClearCart={clearCart} onCheckout={checkout} />
-           ) : (
+            ) : (
               <ProductList onAddToCart={addToCart} />
-           )}
+            )}
+          </div>
         </div>
-     );
+      );
   }
 
   export default CartActions;
